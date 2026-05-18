@@ -13,6 +13,7 @@ return new class extends Migration
     {
         Schema::create('excs_ushtrimet', function (Blueprint $table) {
             $table->id();
+            $table->foreignId('user_id')->constrained('users')->cascadeOnDelete();
             $table->string('emri');
             $table->string('pershkrimi');
             $table->timestamps();

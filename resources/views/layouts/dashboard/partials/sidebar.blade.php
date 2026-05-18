@@ -71,9 +71,9 @@
             </li>
 
             <li class="menu-item">
-                <a href="{{--{{route('manage.klientet')}}--}}" class="menu-link">
+                <a href="{{route('manage.stervitjen')}}" class="menu-link">
                     <span class="material-symbols-outlined menu-icon">chat</span>
-                    <span class="title">Klientet</span>
+                    <span class="title">Stervitja</span>
                 </a>
             </li>
 

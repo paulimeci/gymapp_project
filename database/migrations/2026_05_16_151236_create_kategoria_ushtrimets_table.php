@@ -15,10 +15,11 @@ return new class extends Migration
             $table->id();
             $table->foreignId('kategoria_id')->constrained('excs_kategorite')->cascadeOnDelete();
             $table->foreignId('ushtrimet_id')->constrained('excs_ushtrimet')->cascadeOnDelete();
+            $table->foreignId('user_id')->constrained('users')->cascadeOnDelete();
             $table->timestamps();
 
             // parandalon duplikate
-            $table->unique(['kategoria_id', 'ushtrimet_id']);
+            $table->unique(['user_id', 'kategoria_id', 'ushtrimet_id']);
         });
     }
 

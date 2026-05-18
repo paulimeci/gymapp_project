@@ -5,6 +5,7 @@ namespace App\Livewire\Admin;
 use App\Models\Structure\Kategorite;
 use App\Models\Structure\Ushtrimet;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Support\Facades\Auth;
 use Livewire\Component;
 
 class LiveKategoriteEUshtrimeve extends Component
@@ -68,7 +69,7 @@ class LiveKategoriteEUshtrimeve extends Component
 
         Kategorite::updateOrCreate(
             ['id' => $this->editingKatId],
-            ['emri' => $this->kat_emri, 'pershkrimi' => $this->kat_pershkrimi]
+            ['user_id'=>Auth::user()->id, 'emri' => $this->kat_emri, 'pershkrimi' => $this->kat_pershkrimi]
         );
 
         $this->reset(['kat_emri', 'kat_pershkrimi', 'showKatModal', 'editingKatId']);
@@ -106,10 +107,16 @@ class LiveKategoriteEUshtrimeve extends Component
 
         $ushtrimi = Ushtrimet::updateOrCreate(
             ['id' => $this->editingUshId],
-            ['emri' => $this->ush_emri, 'pershkrimi' => $this->ush_pershkrimi]
+            ['user_id'=>Auth::user()->id, 'emri' => $this->ush_emri, 'pershkrimi' => $this->ush_pershkrimi]
         );
 
-        $ushtrimi->kategorite()->sync($this->kategoritEZgjedhura);
+        // Përgatisim matricën ku çdo ID kategoria ka edhe user_id përkatës
+        $syncData = [];
+        foreach ($this->kategoritEZgjedhura as $id) {
+            $syncData[$id] = ['user_id' => Auth::id()];
+        }
+
+        $ushtrimi->kategorite()->sync($syncData);
 
         $this->reset(['ush_emri', 'ush_pershkrimi', 'kategoritEZgjedhura', 'showUshModal', 'editingUshId']);
     }

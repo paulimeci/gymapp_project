@@ -36,8 +36,9 @@
                 $aktive = $filterKatId === $kategoria->id;
             @endphp
             <div class="col-xxl-2 col-xl-2 col-md-3 col-sm-4 col-6">
-                <div class="card border-0 rounded-3 mb-3 bg-{{ $color }} bg-opacity-10
-                            {{ $aktive ? 'border border-' . $color . ' shadow-sm' : '' }}"
+                <!-- RREGULLIM: Shtuar border i dukshëm dhe tekst me ngjyrë të plotë për kontrast të lartë -->
+                <div class="card border border-{{ $color }} border-opacity-25 rounded-3 mb-3 bg-{{ $color }} bg-opacity-10
+                            {{ $aktive ? 'border-2 border-' . $color . ' border-opacity-100 shadow-sm' : '' }}"
                      wire:click="filtroKat({{ $kategoria->id }})"
                      style="cursor:pointer; transition: transform .15s, box-shadow .15s;
                             {{ $aktive ? 'transform:translateY(-3px)' : '' }}">
@@ -55,12 +56,13 @@
                         </div>
                         <div class="d-flex align-items-center gap-2 py-1">
                             <i class="material-symbols-outlined fs-22 text-{{ $color }}">fitness_center</i>
-                            <span class="fs-13 fw-bold text-secondary">{{ $kategoria->emri }}</span>
+                            <!-- RREGULLIM: Kthyer në text-body për kontrast maksimal mbi sfonde të zbehta -->
+                            <span class="fs-13 fw-bold text-body">{{ $kategoria->emri }}</span>
                             @if($aktive)
                                 <i class="material-symbols-outlined fs-13 text-{{ $color }} ms-auto">check_circle</i>
                             @endif
                         </div>
-                        <span class="fs-11 text-secondary">{{ $kategoria->ushtrimet_count }} ushtrime</span>
+                        <span class="fs-11 text-secondary fw-medium">{{ $kategoria->ushtrimet_count }} ushtrime</span>
                     </div>
                 </div>
             </div>
@@ -136,9 +138,11 @@
                                                 $colors = ['primary','danger','success','warning','info'];
                                                 $color  = $colors[$loop->index % count($colors)];
                                             @endphp
-                                            <span class="badge bg-{{ $color }} bg-opacity-15 text-{{ $color }} rounded-pill px-2 py-1 fs-12">
-                                                    {{ $k->emri }}
-                                                </span>
+                                                <!-- RREGULLIM: Shtuar kontur i hollë dhe detyrim i ngjyrës inline që shkrimi të jetë 100% i pastër në tabelë -->
+                                            <span class="badge border border-{{ $color }} border-opacity-25 bg-{{ $color }} bg-opacity-10 rounded-pill px-2 py-1 fs-12 fw-bold"
+                                                  style="color: var(--bs-{{ $color }}) !important;">
+                                                {{ $k->emri }}
+                                            </span>
                                         @empty
                                             <span class="text-secondary fs-13">—</span>
                                         @endforelse
@@ -251,12 +255,14 @@
                                         $colors = ['primary','danger','success','warning','info'];
                                         $color  = $colors[$loop->index % count($colors)];
                                     @endphp
-                                    <div class="form-check m-0">
-                                        <input class="form-check-input" type="checkbox"
+                                        <!-- RREGULLIM: Strukturim i pastër për checkbox-et e modalit që shkrimi të mos trashëgojë stile të gabuara -->
+                                    <div class="form-check m-0 d-flex align-items-center gap-2">
+                                        <input class="form-check-input mt-0" type="checkbox"
                                                wire:model="kategoritEZgjedhura"
                                                value="{{ $k->id }}" id="kat_{{ $k->id }}">
-                                        <label class="form-check-label badge bg-{{ $color }} bg-opacity-15 text-{{ $color }} rounded-pill px-2 py-1 fs-13"
-                                               style="cursor:pointer" for="kat_{{ $k->id }}">
+                                        <label class="badge border border-{{ $color }} bg-{{ $color }} bg-opacity-10 text-{{ $color }} rounded-pill px-2 py-1 fs-13 fw-semibold m-0"
+                                               style="cursor:pointer; display: inline-block; line-height: 1.2; color: var(--bs-{{ $color }}) !important;"
+                                               for="kat_{{ $k->id }}">
                                             {{ $k->emri }}
                                         </label>
                                     </div>
