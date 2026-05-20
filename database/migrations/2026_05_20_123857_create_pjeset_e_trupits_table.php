@@ -11,15 +11,14 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('excs_ushtrimet', function (Blueprint $table) {
+        Schema::create('human_pjeset_e_trupit', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('user_id')->constrained('users')->cascadeOnDelete();
             $table->string('emri');
-            $table->string('pershkrimi');
-            $table->integer('id_njesia_matese');
-            $table->integer('id_pjeses_trupit');
             $table->timestamps();
         });
+        Artisan::call('db:seed', [
+            '--class' => 'PjesetEtrupitSeeder'
+        ]);
     }
 
     /**
@@ -27,6 +26,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('excs_ushtrimet');
+        Schema::dropIfExists('human_pjeset_e_trupit');
     }
 };

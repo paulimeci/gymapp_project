@@ -16,6 +16,8 @@ return new class extends Migration
             $table->foreignId('id_ushtrimit_exct')->constrained('act_stervitja_ushtrimet')->cascadeOnDelete();
             $table->integer('reps');
             $table->decimal('pesha');
+            $table->integer('kohezgjatja_sekonda')->nullable(); // Më mirë në sekonda, e kthen në minuta në Frontend/App
+            $table->decimal('distanca', 8, 2)->nullable(); // Për vrap/biçikletë (p.sh. 5.4 km)
             $table->timestamps();
         });
     }

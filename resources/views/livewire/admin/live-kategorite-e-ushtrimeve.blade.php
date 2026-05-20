@@ -118,6 +118,7 @@
                             <th scope="col">Emri</th>
                             <th scope="col">Kategoritë</th>
                             <th scope="col">Përshkrimi</th>
+                            <th scope="col">Njesia</th>
                             <th scope="col">Action</th>
                         </tr>
                         </thead>
@@ -149,6 +150,7 @@
                                     </div>
                                 </td>
                                 <td class="text-secondary fs-13">{{ $ushtrimi->pershkrimi ?: '—' }}</td>
+                                <td class="text-secondary fs-13">{{ $ushtrimi->njesia->emri ?: '—' }}</td>
                                 <td>
                                     <div class="d-flex align-items-center gap-1">
                                         <button wire:click="editUsh({{ $ushtrimi->id }})"
@@ -247,6 +249,34 @@
                                       class="form-control rounded-2"
                                       placeholder="Përshkrim i shkurtër..."></textarea>
                         </div>
+
+                        <div class="mb-3">
+                            <label class="form-label fw-medium">Njësia Matëse <span class="text-danger">*</span></label>
+                            <select wire:model="id_njesia_matese" class="form-select rounded-2 @error('id_njesia_matese') is-invalid @enderror">
+                                <option value="">Zgjidh njësinë...</option>
+                                @foreach($njesia_matese as $njesia)
+                                    <option value="{{ $njesia->id }}">{{ $njesia->emri }} ({{ $njesia->shkurtimi }})</option>
+                                @endforeach
+                            </select>
+                            @error('id_njesia_matese') <div class="invalid-feedback">{{ $message }}</div> @enderror
+                        </div>
+
+                        <!-- RE: SHTIMI I PIESES SE TRUPIT -->
+                        <div class="mb-3">
+                            <label class="form-label fw-medium">Pjesa e Trupit <span class="text-danger">*</span></label>
+                            <select wire:model="id_pjesa_trupit" class="form-select rounded-2 @error('id_pjesa_trupit') is-invalid @enderror">
+                                <option value="">Zgjidh pjesën e trupit...</option>
+                                @foreach($pjeset_trupit as $pjesa)
+                                    <option value="{{ $pjesa->id }}">
+                                        {{-- Nëse ke bërë skedarët e gjuhëve, mund të përdorësh: __('muscles.' . $pjesa->emri) --}}
+                                        {{ ucfirst($pjesa->emri) }}
+                                    </option>
+                                @endforeach
+                            </select>
+                            @error('id_pjesa_trupit') <div class="invalid-feedback">{{ $message }}</div> @enderror
+                        </div>
+
+
                         <div class="mb-1">
                             <label class="form-label fw-medium d-block mb-2">Kategoritë</label>
                             <div class="d-flex flex-wrap gap-2">
