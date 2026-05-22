@@ -215,6 +215,96 @@
             </div>
         @endif
 
+        {{-- MODAL DETAJET --}}
+        @if($modalDetaje && $stervitjaAktive)
+            <div class="modal fade show d-block" tabindex="-1" style="background: rgba(0,0,0,0.5);">
+                <div class="modal-dialog modal-lg modal-dialog-scrollable">
+                    <div class="modal-content border-0 rounded-3">
+
+                        <div class="modal-header border-0 pb-0">
+                            <div>
+                                <h5 class="modal-title fw-bold mb-1">
+                                    <i class="material-symbols-outlined fs-20 me-1 align-middle">fitness_center</i>
+                                    {{ $stervitjaAktive->kategoria?->emri ?? '—' }}
+                                </h5>
+                                <span class="fs-13 text-secondary">
+                            {{ \Carbon\Carbon::parse($stervitjaAktive->data)->format('d M Y') }}
+                        </span>
+                            </div>
+                            <button type="button" class="btn-close" wire:click="mbyllDetajet"></button>
+                        </div>
+
+                        <div class="modal-body pt-3">
+                            @foreach($stervitjaAktive->ushtrimet as $su)
+                                <div class="card border-0 rounded-3 mb-3 bg-light">
+                                    <div class="card-body p-3">
+
+                                        {{-- Emri i ushtrimit --}}
+                                        <div class="d-flex align-items-center gap-2 mb-3">
+                                            <i class="material-symbols-outlined fs-18 text-primary">fitness_center</i>
+                                            <span class="fw-semibold fs-14">{{ $su->ushtrimi?->emri ?? '—' }}</span>
+                                            @if($su->ushtrimi?->pjeset_e_trupit)
+                                                <span class="fs-12 text-secondary ms-1">
+                                            · {{ $su->ushtrimi->pjeset_e_trupit->emri }}
+                                        </span>
+                                            @endif
+                                        </div>
+
+                                        {{-- Sets --}}
+                                        @php $njesia = (int) ($su->ushtrimi?->id_njesia_matese ?? 1); @endphp
+
+                                        <div class="d-flex align-items-center gap-2 mb-2">
+                                            <span class="fs-11 text-secondary fw-medium" style="min-width:30px">Set</span>
+                                            @if($njesia === 1)
+                                                <span class="fs-11 text-secondary fw-medium" style="min-width:80px">Reps</span>
+                                                <span class="fs-11 text-secondary fw-medium">Pesha (kg)</span>
+                                            @else
+                                                <span class="fs-11 text-secondary fw-medium" style="min-width:80px">Minuta</span>
+                                                <span class="fs-11 text-secondary fw-medium">Km</span>
+                                            @endif
+                                        </div>
+
+                                        @foreach($su->detaje as $i => $det)
+                                            <div class="d-flex align-items-center gap-2 mb-1">
+                                        <span class="fs-12 fw-bold text-secondary" style="min-width:30px">
+                                            {{ $i + 1 }}
+                                        </span>
+                                                @if($njesia === 1)
+                                                    <span class="fs-13 fw-medium" style="min-width:80px">
+                                                {{ $det->reps }} reps
+                                            </span>
+                                                    <span class="fs-13 fw-medium">
+                                                {{ $det->pesha }} kg
+                                            </span>
+                                                @else
+                                                    <span class="fs-13 fw-medium" style="min-width:80px">
+                                                {{ $det->kohezgjatja_sekonda ? round($det->kohezgjatja_sekonda / 60) : '—' }} min
+                                            </span>
+                                                    <span class="fs-13 fw-medium">
+                                                {{ $det->distanca ?? '—' }} km
+                                            </span>
+                                                @endif
+                                            </div>
+                                        @endforeach
+
+                                    </div>
+                                </div>
+                            @endforeach
+                        </div>
+
+                        <div class="modal-footer border-0 pt-0">
+                            <button type="button"
+                                    class="btn btn-light btn-sm rounded-3"
+                                    wire:click="mbyllDetajet">
+                                Mbyll
+                            </button>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        @endif
+
         <div class="row justify-content-center">
             <div class="col-xxl-8">
                 <div class="card bg-white border-0 rounded-3 mb-4">
@@ -267,7 +357,8 @@
                                             </td>
                                             <td>
                                                 <div class="d-flex align-items-center gap-1">
-                                                    <button class="ps-0 border-0 bg-transparent lh-1 position-relative top-2">
+                                                    <button wire:click="shihDetajet({{ $s->id }})"
+                                                            class="ps-0 border-0 bg-transparent lh-1 position-relative top-2">
                                                         <i class="material-symbols-outlined fs-16 text-primary">visibility</i>
                                                     </button>
                                                     <button class="ps-0 border-0 bg-transparent lh-1 position-relative top-2">
@@ -348,3 +439,4 @@
 
     <div class="flex-grow-1"></div>
 </div>
+
