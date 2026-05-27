@@ -18,6 +18,12 @@ return new class extends Migration
             $table->decimal('pesha');
             $table->integer('kohezgjatja_sekonda')->nullable(); // Më mirë në sekonda, e kthen në minuta në Frontend/App
             $table->decimal('distanca', 8, 2)->nullable(); // Për vrap/biçikletë (p.sh. 5.4 km)
+            $table->enum('krahu', [
+                'majtas',
+                'djathtas',
+                'te_dyja',
+                'asnjera'
+            ])->default('te_dyja')->nullable();
             $table->timestamps();
         });
     }

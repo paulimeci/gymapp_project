@@ -99,27 +99,26 @@
 
                                                 {{-- Header i sets --}}
                                                 <div class="d-flex align-items-center gap-2 mb-2">
-                        <span class="fs-12 text-secondary fw-medium">
-                            @if($njesia === 1) Set &nbsp;·&nbsp; Reps &nbsp;·&nbsp; Pesha (kg)
-                            @else Set &nbsp;·&nbsp; Minuta &nbsp;·&nbsp; Km
-                            @endif
-                        </span>
+                                            <span class="fs-12 text-secondary fw-medium">
+                                                @if($njesia === 1) Set &nbsp;·&nbsp; Reps &nbsp;·&nbsp; Pesha (kg) &nbsp;·&nbsp; Modaliteti
+                                                @else Set &nbsp;·&nbsp; Minuta &nbsp;·&nbsp; Km &nbsp;·&nbsp; Modaliteti
+                                                @endif
+                                            </span>
                                                 </div>
 
                                                 @foreach($detaje['sets'] as $setIndex => $set)
-                                                    <div class="d-flex align-items-center gap-2 mb-2">
+                                                    <div class="d-flex align-items-center flex-wrap gap-2 mb-2 p-2 rounded bg-light bg-opacity-50">
 
                                                         {{-- Numri i setit --}}
-                                                        <span class="fs-12 fw-bold text-secondary"
-                                                              style="min-width:24px; text-align:center;">
-    {{ $setIndex + 1 }}
-</span>
+                                                        <span class="fs-12 fw-bold text-secondary" style="min-width:24px; text-align:center;">
+                                                    {{ $setIndex + 1 }}
+                                                </span>
 
                                                         @if($njesia === 1)
                                                             <div class="input-group input-group-sm" style="width:110px">
-                                    <span class="input-group-text bg-transparent border-end-0">
-                                        <i class="material-symbols-outlined fs-13">repeat</i>
-                                    </span>
+                                                        <span class="input-group-text bg-transparent border-end-0">
+                                                            <i class="material-symbols-outlined fs-13">repeat</i>
+                                                        </span>
                                                                 <input type="number"
                                                                        class="form-control border-start-0"
                                                                        placeholder="Reps"
@@ -127,9 +126,9 @@
                                                                        wire:model="ushtrimet.{{ $id }}.sets.{{ $setIndex }}.reps">
                                                             </div>
                                                             <div class="input-group input-group-sm" style="width:120px">
-                                    <span class="input-group-text bg-transparent border-end-0">
-                                        <i class="material-symbols-outlined fs-13">monitor_weight</i>
-                                    </span>
+                                                        <span class="input-group-text bg-transparent border-end-0">
+                                                            <i class="material-symbols-outlined fs-13">monitor_weight</i>
+                                                        </span>
                                                                 <input type="number"
                                                                        class="form-control border-start-0"
                                                                        placeholder="kg"
@@ -140,9 +139,9 @@
 
                                                         @elseif($njesia === 2)
                                                             <div class="input-group input-group-sm" style="width:120px">
-                                    <span class="input-group-text bg-transparent border-end-0">
-                                        <i class="material-symbols-outlined fs-13">timer</i>
-                                    </span>
+                                                        <span class="input-group-text bg-transparent border-end-0">
+                                                            <i class="material-symbols-outlined fs-13">timer</i>
+                                                        </span>
                                                                 <input type="number"
                                                                        class="form-control border-start-0"
                                                                        placeholder="Minuta"
@@ -150,9 +149,9 @@
                                                                        wire:model="ushtrimet.{{ $id }}.sets.{{ $setIndex }}.minuta">
                                                             </div>
                                                             <div class="input-group input-group-sm" style="width:120px">
-                                    <span class="input-group-text bg-transparent border-end-0">
-                                        <i class="material-symbols-outlined fs-13">directions_run</i>
-                                    </span>
+                                                        <span class="input-group-text bg-transparent border-end-0">
+                                                            <i class="material-symbols-outlined fs-13">directions_run</i>
+                                                        </span>
                                                                 <input type="number"
                                                                        class="form-control border-start-0"
                                                                        placeholder="Km"
@@ -161,6 +160,43 @@
                                                                        wire:model="ushtrimet.{{ $id }}.sets.{{ $setIndex }}.km">
                                                             </div>
                                                         @endif
+
+                                                        {{-- Zgjedhja e Anës (Dual, Left, Right, None) --}}
+                                                        <div class="d-flex align-items-center gap-1 ms-md-auto" role="group" aria-label="Modaliteti">
+                                                            @php
+                                                                // Marrim vlerën nga Livewire. Nëse nuk ekziston (null/e zbrazët), supozojmë që është 'dual'
+                                                                $vleraAktuale = $ushtrimet[$id]['sets'][$setIndex]['modaliteti'] ?? 'dual';
+                                                            @endphp
+
+                                                            <input type="radio" id="dual_{{ $id }}_{{ $setIndex }}" value="dual" wire:model.live="ushtrimet.{{ $id }}.sets.{{ $setIndex }}.modaliteti" class="d-none">
+                                                            <input type="radio" id="left_{{ $id }}_{{ $setIndex }}" value="left" wire:model.live="ushtrimet.{{ $id }}.sets.{{ $setIndex }}.modaliteti" class="d-none">
+                                                            <input type="radio" id="right_{{ $id }}_{{ $setIndex }}" value="right" wire:model.live="ushtrimet.{{ $id }}.sets.{{ $setIndex }}.modaliteti" class="d-none">
+                                                            <input type="radio" id="none_{{ $id }}_{{ $setIndex }}" value="none" wire:model.live="ushtrimet.{{ $id }}.sets.{{ $setIndex }}.modaliteti" class="d-none">
+
+                                                            <label for="dual_{{ $id }}_{{ $setIndex }}"
+                                                                   class="btn {{ $vleraAktuale === 'dual' ? 'btn-primary text-white' : 'btn-outline-primary' }} fw-medium py-1 px-2 fs-11 hover-white m-0"
+                                                                   style="cursor: pointer;">
+                                                                Dual
+                                                            </label>
+
+                                                            <label for="left_{{ $id }}_{{ $setIndex }}"
+                                                                   class="btn {{ $vleraAktuale === 'left' ? 'btn-success text-white' : 'btn-outline-success' }} fw-medium py-1 px-2 fs-11 hover-white m-0"
+                                                                   style="cursor: pointer;">
+                                                                Left
+                                                            </label>
+
+                                                            <label for="right_{{ $id }}_{{ $setIndex }}"
+                                                                   class="btn {{ $vleraAktuale === 'right' ? 'btn-warning text-dark' : 'btn-outline-warning' }} fw-medium py-1 px-2 fs-11 hover-white m-0"
+                                                                   style="cursor: pointer;">
+                                                                Right
+                                                            </label>
+
+                                                            <label for="none_{{ $id }}_{{ $setIndex }}"
+                                                                   class="btn {{ $vleraAktuale === 'none' ? 'btn-dark text-white' : 'btn-outline-dark' }} fw-medium py-1 px-2 fs-11 hover-white m-0"
+                                                                   style="cursor: pointer;">
+                                                                None
+                                                            </label>
+                                                        </div>
 
                                                         {{-- Hiq setin --}}
                                                         @if(count($detaje['sets']) > 1)
@@ -305,6 +341,39 @@
             </div>
         @endif
 
+        {{-- Modali i Konfirmimit të Fshirjes --}}
+        @if($modal_fshirje)
+            <div class="modal fade show d-block" tabindex="-1" style="background: rgba(0,0,0,0.5); z-index: 1055;">
+                <div class="modal-dialog modal-dialog-centered">
+                    <div class="modal-content border-0 rounded-3 shadow">
+
+                        <div class="modal-header border-0 pb-0">
+                            <h5 class="modal-title fw-bold text-danger">
+                                <i class="material-symbols-outlined align-middle me-1">warning</i>
+                                Konfirmo Fshirjen
+                            </h5>
+                            <button type="button" class="btn-close" wire:click="anuloFshirjen()"></button>
+                        </div>
+
+                        <div class="modal-body py-3">
+                            <p class="mb-0 text-secondary">A jeni i sigurt që dëshironi të fshini këtë seancë stërvitore? Ky veprim do të fshijë përgjithmonë të gjitha ushtrimet dhe setet e regjistruara për këtë ditë dhe nuk mund të kthehet pas.</p>
+                        </div>
+
+                        <div class="modal-footer border-0 pt-0">
+                            <button type="button" class="btn btn-light btn-sm rounded-2" wire:click="anuloFshirjen()">
+                                Anulo
+                            </button>
+                            <button type="button" class="btn btn-danger btn-sm rounded-2 text-white" wire:click="fshiSeancen">
+                                <i class="material-symbols-outlined fs-16 align-middle me-1">delete</i>
+                                Po, fshije
+                            </button>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        @endif
+
         <div class="row justify-content-center">
             <div class="col-xxl-8">
                 <div class="card bg-white border-0 rounded-3 mb-4">
@@ -328,12 +397,21 @@
                                     <tbody>
                                     @forelse($historiku as $s)
                                         <tr>
-                                            <td class="text-secondary fs-13">{{ $loop->iteration }}</td>
+                                            <td class="text-secondary fs-13">{{ $historiku->firstItem() + $loop->index }}</td>
                                             <td class="fs-13 fw-medium">
                                                 {{ \Carbon\Carbon::parse($s->data)->format('d M Y') }}
                                             </td>
                                             <td>
-                                        <span class="fs-13 fw-medium">
+                                                @php
+                                                    $katColors = [
+                                                        'push' => 'primary',
+                                                        'pull' => 'danger',
+                                                        'legs' => 'success',
+                                                        'mix'  => 'warning',
+                                                    ];
+                                                    $katColor = $katColors[strtolower($s->kategoria?->emri ?? '')] ?? 'secondary';
+                                                @endphp
+                                                <span class="fs-13 fw-medium text-{{ $katColor }}">
                                             {{ $s->kategoria?->emri ?? '—' }}
                                         </span>
                                             </td>
@@ -347,9 +425,7 @@
                                                 <div class="d-flex flex-wrap gap-1">
                                                     @forelse($pjeset as $p)
                                                         <span class="fs-12 fw-medium text-secondary">{{ $p->emri }}</span>
-                                                        @if(!$loop->last)
-                                                            <span class="text-secondary">, </span>
-                                                        @endif
+                                                        @if(!$loop->last)<span class="text-secondary">,</span>@endif
                                                     @empty
                                                         <span class="text-secondary fs-13">—</span>
                                                     @endforelse
@@ -361,12 +437,18 @@
                                                             class="ps-0 border-0 bg-transparent lh-1 position-relative top-2">
                                                         <i class="material-symbols-outlined fs-16 text-primary">visibility</i>
                                                     </button>
-                                                    <button class="ps-0 border-0 bg-transparent lh-1 position-relative top-2">
+                                                    <button wire:click="editoSeancen({{ $s->id }})"
+                                                            class="ps-0 border-0 bg-transparent lh-1 position-relative top-2">
                                                         <i class="material-symbols-outlined fs-16 text-body">edit</i>
                                                     </button>
-                                                    <button class="ps-0 border-0 bg-transparent lh-1 position-relative top-2">
-                                                        <i class="material-symbols-outlined fs-16 text-danger">delete</i>
-                                                    </button>
+                                                    <div wire:key="seanca-{{ $s->id }}">
+
+                                                        <button type="button" wire:click="konfirmoFshirjen({{ $s->id }})"
+                                                                class="ps-0 border-0 bg-transparent lh-1 position-relative top-2">
+                                                            <i class="material-symbols-outlined fs-16 text-danger">delete</i>
+                                                        </button>
+
+                                                    </div>
                                                 </div>
                                             </td>
                                         </tr>
@@ -381,6 +463,47 @@
                                     </tbody>
                                 </table>
                             </div>
+
+                            {{-- PAGINATION --}}
+                            @if($historiku->hasPages())
+                                <div class="d-flex justify-content-center justify-content-sm-between align-items-center
+                                text-center flex-wrap gap-2 p-4">
+                        <span class="fs-12 fw-medium">
+                            Duke shfaqur {{ $historiku->firstItem() }}–{{ $historiku->lastItem() }}
+                            nga {{ $historiku->total() }} rezultate
+                        </span>
+                                    <nav aria-label="Pagination">
+                                        <ul class="pagination mb-0 justify-content-center">
+                                            {{-- Previous --}}
+                                            <li class="page-item {{ $historiku->onFirstPage() ? 'disabled' : '' }}">
+                                                <button class="page-link icon"
+                                                        wire:click="previousPage"
+                                                    {{ $historiku->onFirstPage() ? 'disabled' : '' }}>
+                                                    <i class="material-symbols-outlined">keyboard_arrow_left</i>
+                                                </button>
+                                            </li>
+
+                                            {{-- Faqet --}}
+                                            @foreach($historiku->getUrlRange(1, $historiku->lastPage()) as $page => $url)
+                                                <li class="page-item {{ $page == $historiku->currentPage() ? 'active' : '' }}">
+                                                    <button class="page-link" wire:click="gotoPage({{ $page }})">
+                                                        {{ $page }}
+                                                    </button>
+                                                </li>
+                                            @endforeach
+
+                                            {{-- Next --}}
+                                            <li class="page-item {{ !$historiku->hasMorePages() ? 'disabled' : '' }}">
+                                                <button class="page-link icon"
+                                                        wire:click="nextPage"
+                                                    {{ !$historiku->hasMorePages() ? 'disabled' : '' }}>
+                                                    <i class="material-symbols-outlined">keyboard_arrow_right</i>
+                                                </button>
+                                            </li>
+                                        </ul>
+                                    </nav>
+                                </div>
+                            @endif
                         </div>
                     </div>
                 </div>
