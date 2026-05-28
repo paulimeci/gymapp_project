@@ -341,6 +341,39 @@ class LiveStervitja extends Component
         // Mbyllim modalin dhe pastrojmë ID-në
         $this->anuloFshirjen();
     }
+
+    public function hapDetajetNgaData(string $data): void
+    {
+        $stervitja = Stervitja::where('user_id', Auth::id())
+            ->whereDate('data', $data)
+            ->first();
+
+        if ($stervitja) {
+            $this->shihDetajet($stervitja->id);
+        }
+    }
+
+
+    public function updatedKategoriaId($value): void
+    {
+        $this->ushtrimet = [];
+
+        $kategoria = Kategorite::with('ushtrimet')->find($value);
+        if (!$kategoria) return;
+
+        foreach ($kategoria->ushtrimet as $u) {
+            $this->ushtrimet[$u->id] = [
+                'emri'          => $u->emri,
+                'njesia_matese' => (int) $u->id_njesia_matese,
+                'checked'       => false,
+                'sets'          => [
+                    ['reps' => '', 'pesha' => '', 'minuta' => '', 'km' => '', 'modaliteti' => 'dual']
+                ],
+            ];
+        }
+    }
+
+
     public function render()
     {
         $historiku = Stervitja::with([
@@ -350,7 +383,7 @@ class LiveStervitja extends Component
         ])
             ->where('user_id', Auth::id())
             ->latest()
-            ->get(); // mbaj get() për kalendar
+            ->get();
 
         $historikuPaginate = Stervitja::with([
             'kategoria',
@@ -360,12 +393,11 @@ class LiveStervitja extends Component
             ->latest()
             ->paginate(10);
 
-        $this->dispatch('kalendari-perditeso', evente: $this->getStervitjetPerKalendar($historiku));
-
         return view('livewire.stervitja.live-stervitja', [
-            'kategorite'      => Kategorite::withCount('ushtrimet')->latest()->get(),
-            'historiku'       => $historikuPaginate,
-            'stervitjaAktive' => $this->stervitjaDetajeId
+            'kategorite'        => Kategorite::withCount('ushtrimet')->latest()->get(),
+            'historiku'         => $historikuPaginate,
+            'eventetKalendarit' => $this->getStervitjetPerKalendar($historiku),
+            'stervitjaAktive'   => $this->stervitjaDetajeId
                 ? Stervitja::with([
                     'kategoria',
                     'ushtrimet.ushtrimi',

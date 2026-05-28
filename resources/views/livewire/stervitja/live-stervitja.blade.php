@@ -1,4 +1,6 @@
 <div>
+    <link href='https://cdn.jsdelivr.net/npm/fullcalendar@6.1.11/index.global.min.css' rel='stylesheet' />
+    <script src='https://cdn.jsdelivr.net/npm/fullcalendar@6.1.11/index.global.min.js'></script>
     <div class="main-content-container overflow-hidden">
 
         {{-- KATEGORITE --}}
@@ -35,7 +37,7 @@
             @endforelse
         </div>
 
-        {{-- MODAL --}}
+        {{-- MODAL REGJISTRIM / EDIT --}}
         @if($modalHapur)
             <div class="modal fade show d-block" tabindex="-1" style="background: rgba(0,0,0,0.5);">
                 <div class="modal-dialog modal-lg modal-dialog-scrollable">
@@ -99,11 +101,11 @@
 
                                                 {{-- Header i sets --}}
                                                 <div class="d-flex align-items-center gap-2 mb-2">
-                                            <span class="fs-12 text-secondary fw-medium">
-                                                @if($njesia === 1) Set &nbsp;·&nbsp; Reps &nbsp;·&nbsp; Pesha (kg) &nbsp;·&nbsp; Modaliteti
-                                                @else Set &nbsp;·&nbsp; Minuta &nbsp;·&nbsp; Km &nbsp;·&nbsp; Modaliteti
-                                                @endif
-                                            </span>
+                                                    <span class="fs-12 text-secondary fw-medium">
+                                                        @if($njesia === 1) Set &nbsp;·&nbsp; Reps &nbsp;·&nbsp; Pesha (kg) &nbsp;·&nbsp; Modaliteti
+                                                        @else Set &nbsp;·&nbsp; Minuta &nbsp;·&nbsp; Km &nbsp;·&nbsp; Modaliteti
+                                                        @endif
+                                                    </span>
                                                 </div>
 
                                                 @foreach($detaje['sets'] as $setIndex => $set)
@@ -111,14 +113,14 @@
 
                                                         {{-- Numri i setit --}}
                                                         <span class="fs-12 fw-bold text-secondary" style="min-width:24px; text-align:center;">
-                                                    {{ $setIndex + 1 }}
-                                                </span>
+                                                            {{ $setIndex + 1 }}
+                                                        </span>
 
                                                         @if($njesia === 1)
                                                             <div class="input-group input-group-sm" style="width:110px">
-                                                        <span class="input-group-text bg-transparent border-end-0">
-                                                            <i class="material-symbols-outlined fs-13">repeat</i>
-                                                        </span>
+                                                                <span class="input-group-text bg-transparent border-end-0">
+                                                                    <i class="material-symbols-outlined fs-13">repeat</i>
+                                                                </span>
                                                                 <input type="number"
                                                                        class="form-control border-start-0"
                                                                        placeholder="Reps"
@@ -126,9 +128,9 @@
                                                                        wire:model="ushtrimet.{{ $id }}.sets.{{ $setIndex }}.reps">
                                                             </div>
                                                             <div class="input-group input-group-sm" style="width:120px">
-                                                        <span class="input-group-text bg-transparent border-end-0">
-                                                            <i class="material-symbols-outlined fs-13">monitor_weight</i>
-                                                        </span>
+                                                                <span class="input-group-text bg-transparent border-end-0">
+                                                                    <i class="material-symbols-outlined fs-13">monitor_weight</i>
+                                                                </span>
                                                                 <input type="number"
                                                                        class="form-control border-start-0"
                                                                        placeholder="kg"
@@ -139,9 +141,9 @@
 
                                                         @elseif($njesia === 2)
                                                             <div class="input-group input-group-sm" style="width:120px">
-                                                        <span class="input-group-text bg-transparent border-end-0">
-                                                            <i class="material-symbols-outlined fs-13">timer</i>
-                                                        </span>
+                                                                <span class="input-group-text bg-transparent border-end-0">
+                                                                    <i class="material-symbols-outlined fs-13">timer</i>
+                                                                </span>
                                                                 <input type="number"
                                                                        class="form-control border-start-0"
                                                                        placeholder="Minuta"
@@ -149,9 +151,9 @@
                                                                        wire:model="ushtrimet.{{ $id }}.sets.{{ $setIndex }}.minuta">
                                                             </div>
                                                             <div class="input-group input-group-sm" style="width:120px">
-                                                        <span class="input-group-text bg-transparent border-end-0">
-                                                            <i class="material-symbols-outlined fs-13">directions_run</i>
-                                                        </span>
+                                                                <span class="input-group-text bg-transparent border-end-0">
+                                                                    <i class="material-symbols-outlined fs-13">directions_run</i>
+                                                                </span>
                                                                 <input type="number"
                                                                        class="form-control border-start-0"
                                                                        placeholder="Km"
@@ -161,10 +163,9 @@
                                                             </div>
                                                         @endif
 
-                                                        {{-- Zgjedhja e Anës (Dual, Left, Right, None) --}}
+                                                        {{-- Zgjedhja e Modalitetit --}}
                                                         <div class="d-flex align-items-center gap-1 ms-md-auto" role="group" aria-label="Modaliteti">
                                                             @php
-                                                                // Marrim vlerën nga Livewire. Nëse nuk ekziston (null/e zbrazët), supozojmë që është 'dual'
                                                                 $vleraAktuale = $ushtrimet[$id]['sets'][$setIndex]['modaliteti'] ?? 'dual';
                                                             @endphp
 
@@ -174,28 +175,20 @@
                                                             <input type="radio" id="none_{{ $id }}_{{ $setIndex }}" value="none" wire:model.live="ushtrimet.{{ $id }}.sets.{{ $setIndex }}.modaliteti" class="d-none">
 
                                                             <label for="dual_{{ $id }}_{{ $setIndex }}"
-                                                                   class="btn {{ $vleraAktuale === 'dual' ? 'btn-primary text-white' : 'btn-outline-primary' }} fw-medium py-1 px-2 fs-11 hover-white m-0"
-                                                                   style="cursor: pointer;">
-                                                                Dual
-                                                            </label>
+                                                                   class="btn {{ $vleraAktuale === 'dual' ? 'btn-primary text-white' : 'btn-outline-primary' }} fw-medium py-1 px-2 fs-11 m-0"
+                                                                   style="cursor: pointer;">Dual</label>
 
                                                             <label for="left_{{ $id }}_{{ $setIndex }}"
-                                                                   class="btn {{ $vleraAktuale === 'left' ? 'btn-success text-white' : 'btn-outline-success' }} fw-medium py-1 px-2 fs-11 hover-white m-0"
-                                                                   style="cursor: pointer;">
-                                                                Left
-                                                            </label>
+                                                                   class="btn {{ $vleraAktuale === 'left' ? 'btn-success text-white' : 'btn-outline-success' }} fw-medium py-1 px-2 fs-11 m-0"
+                                                                   style="cursor: pointer;">Left</label>
 
                                                             <label for="right_{{ $id }}_{{ $setIndex }}"
-                                                                   class="btn {{ $vleraAktuale === 'right' ? 'btn-warning text-dark' : 'btn-outline-warning' }} fw-medium py-1 px-2 fs-11 hover-white m-0"
-                                                                   style="cursor: pointer;">
-                                                                Right
-                                                            </label>
+                                                                   class="btn {{ $vleraAktuale === 'right' ? 'btn-warning text-dark' : 'btn-outline-warning' }} fw-medium py-1 px-2 fs-11 m-0"
+                                                                   style="cursor: pointer;">Right</label>
 
                                                             <label for="none_{{ $id }}_{{ $setIndex }}"
-                                                                   class="btn {{ $vleraAktuale === 'none' ? 'btn-dark text-white' : 'btn-outline-dark' }} fw-medium py-1 px-2 fs-11 hover-white m-0"
-                                                                   style="cursor: pointer;">
-                                                                None
-                                                            </label>
+                                                                   class="btn {{ $vleraAktuale === 'none' ? 'btn-dark text-white' : 'btn-outline-dark' }} fw-medium py-1 px-2 fs-11 m-0"
+                                                                   style="cursor: pointer;">None</label>
                                                         </div>
 
                                                         {{-- Hiq setin --}}
@@ -239,8 +232,8 @@
                             <button type="button"
                                     class="btn btn-primary btn-sm rounded-3"
                                     wire:click="ruaj">
-                        <span wire:loading wire:target="ruaj"
-                              class="spinner-border spinner-border-sm me-1"></span>
+                                <span wire:loading wire:target="ruaj"
+                                      class="spinner-border spinner-border-sm me-1"></span>
                                 <i class="material-symbols-outlined fs-16 align-middle me-1">save</i>
                                 Ruaj Stërvitjen
                             </button>
@@ -264,8 +257,8 @@
                                     {{ $stervitjaAktive->kategoria?->emri ?? '—' }}
                                 </h5>
                                 <span class="fs-13 text-secondary">
-                            {{ \Carbon\Carbon::parse($stervitjaAktive->data)->format('d M Y') }}
-                        </span>
+                                    {{ \Carbon\Carbon::parse($stervitjaAktive->data)->format('d M Y') }}
+                                </span>
                             </div>
                             <button type="button" class="btn-close" wire:click="mbyllDetajet"></button>
                         </div>
@@ -275,18 +268,16 @@
                                 <div class="card border-0 rounded-3 mb-3 bg-light">
                                     <div class="card-body p-3">
 
-                                        {{-- Emri i ushtrimit --}}
                                         <div class="d-flex align-items-center gap-2 mb-3">
                                             <i class="material-symbols-outlined fs-18 text-primary">fitness_center</i>
                                             <span class="fw-semibold fs-14">{{ $su->ushtrimi?->emri ?? '—' }}</span>
                                             @if($su->ushtrimi?->pjeset_e_trupit)
                                                 <span class="fs-12 text-secondary ms-1">
-                                            · {{ $su->ushtrimi->pjeset_e_trupit->emri }}
-                                        </span>
+                                                    · {{ $su->ushtrimi->pjeset_e_trupit->emri }}
+                                                </span>
                                             @endif
                                         </div>
 
-                                        {{-- Sets --}}
                                         @php $njesia = (int) ($su->ushtrimi?->id_njesia_matese ?? 1); @endphp
 
                                         <div class="d-flex align-items-center gap-2 mb-2">
@@ -302,23 +293,18 @@
 
                                         @foreach($su->detaje as $i => $det)
                                             <div class="d-flex align-items-center gap-2 mb-1">
-                                        <span class="fs-12 fw-bold text-secondary" style="min-width:30px">
-                                            {{ $i + 1 }}
-                                        </span>
+                                                <span class="fs-12 fw-bold text-secondary" style="min-width:30px">
+                                                    {{ $i + 1 }}
+                                                </span>
                                                 @if($njesia === 1)
-                                                    <span class="fs-13 fw-medium" style="min-width:80px">
-                                                {{ $det->reps }} reps
-                                            </span>
-                                                    <span class="fs-13 fw-medium">
-                                                {{ $det->pesha }} kg
-                                            </span>
+                                                    <span class="fs-13 fw-medium" style="min-width:80px">{{ $det->reps }} reps</span>
+                                                    <span class="fs-13 fw-medium">{{ $det->pesha }} kg</span>
+                                                    <span class="fs-13 fw-medium text-secondary">{{ $det->krahu }}</span>
                                                 @else
                                                     <span class="fs-13 fw-medium" style="min-width:80px">
-                                                {{ $det->kohezgjatja_sekonda ? round($det->kohezgjatja_sekonda / 60) : '—' }} min
-                                            </span>
-                                                    <span class="fs-13 fw-medium">
-                                                {{ $det->distanca ?? '—' }} km
-                                            </span>
+                                                        {{ $det->kohezgjatja_sekonda ? round($det->kohezgjatja_sekonda / 60) : '—' }} min
+                                                    </span>
+                                                    <span class="fs-13 fw-medium">{{ $det->distanca ?? '—' }} km</span>
                                                 @endif
                                             </div>
                                         @endforeach
@@ -341,7 +327,7 @@
             </div>
         @endif
 
-        {{-- Modali i Konfirmimit të Fshirjes --}}
+        {{-- MODAL KONFIRMIM FSHIRJE --}}
         @if($modal_fshirje)
             <div class="modal fade show d-block" tabindex="-1" style="background: rgba(0,0,0,0.5); z-index: 1055;">
                 <div class="modal-dialog modal-dialog-centered">
@@ -412,8 +398,8 @@
                                                     $katColor = $katColors[strtolower($s->kategoria?->emri ?? '')] ?? 'secondary';
                                                 @endphp
                                                 <span class="fs-13 fw-medium text-{{ $katColor }}">
-                                            {{ $s->kategoria?->emri ?? '—' }}
-                                        </span>
+                                                    {{ $s->kategoria?->emri ?? '—' }}
+                                                </span>
                                             </td>
                                             <td>
                                                 @php
@@ -442,12 +428,10 @@
                                                         <i class="material-symbols-outlined fs-16 text-body">edit</i>
                                                     </button>
                                                     <div wire:key="seanca-{{ $s->id }}">
-
                                                         <button type="button" wire:click="konfirmoFshirjen({{ $s->id }})"
                                                                 class="ps-0 border-0 bg-transparent lh-1 position-relative top-2">
                                                             <i class="material-symbols-outlined fs-16 text-danger">delete</i>
                                                         </button>
-
                                                     </div>
                                                 </div>
                                             </td>
@@ -467,14 +451,13 @@
                             {{-- PAGINATION --}}
                             @if($historiku->hasPages())
                                 <div class="d-flex justify-content-center justify-content-sm-between align-items-center
-                                text-center flex-wrap gap-2 p-4">
-                        <span class="fs-12 fw-medium">
-                            Duke shfaqur {{ $historiku->firstItem() }}–{{ $historiku->lastItem() }}
-                            nga {{ $historiku->total() }} rezultate
-                        </span>
+                                    text-center flex-wrap gap-2 p-4">
+                                    <span class="fs-12 fw-medium">
+                                        Duke shfaqur {{ $historiku->firstItem() }}–{{ $historiku->lastItem() }}
+                                        nga {{ $historiku->total() }} rezultate
+                                    </span>
                                     <nav aria-label="Pagination">
                                         <ul class="pagination mb-0 justify-content-center">
-                                            {{-- Previous --}}
                                             <li class="page-item {{ $historiku->onFirstPage() ? 'disabled' : '' }}">
                                                 <button class="page-link icon"
                                                         wire:click="previousPage"
@@ -483,7 +466,6 @@
                                                 </button>
                                             </li>
 
-                                            {{-- Faqet --}}
                                             @foreach($historiku->getUrlRange(1, $historiku->lastPage()) as $page => $url)
                                                 <li class="page-item {{ $page == $historiku->currentPage() ? 'active' : '' }}">
                                                     <button class="page-link" wire:click="gotoPage({{ $page }})">
@@ -492,7 +474,6 @@
                                                 </li>
                                             @endforeach
 
-                                            {{-- Next --}}
                                             <li class="page-item {{ !$historiku->hasMorePages() ? 'disabled' : '' }}">
                                                 <button class="page-link icon"
                                                         wire:click="nextPage"
@@ -508,50 +489,26 @@
                     </div>
                 </div>
             </div>
+
+            {{-- KALENDARI --}}
             <div class="col-lg-4 col-md-6">
                 <div class="card bg-white border-0 rounded-3 mb-4">
                     <div class="card-body p-4">
                         <div class="mb-3 mb-lg-4">
                             <h3 class="mb-0">Working Schedule</h3>
                         </div>
+
+                        {{-- Legend --}}
+                        <div class="d-flex flex-wrap gap-2 mb-3">
+                            <span class="badge rounded-pill fs-11 fw-medium" style="background:#0d6efd20; color:#0d6efd;">● Push</span>
+                            <span class="badge rounded-pill fs-11 fw-medium" style="background:#dc354520; color:#dc3545;">● Pull</span>
+                            <span class="badge rounded-pill fs-11 fw-medium" style="background:#19875420; color:#198754;">● Legs</span>
+                            <span class="badge rounded-pill fs-11 fw-medium" style="background:#ffc10720; color:#856404;">● Mix</span>
+                        </div>
+
                         <div class="calendar-wraps">
-                            <div id="calendari"></div>
-                        </div>
-
-                        <div class="d-flex justify-content-between align-items-center mb-3">
-                            <span class="fw-medium">Upcoming Events:</span>
-                            <div class="swiper-pagination1 text-end" style="width: 100px;"></div>
-                        </div>
-
-                        <div class="swiper upcoming-events-slide">
-                            <div class="swiper-wrapper">
-                                <div class="swiper-slide cursor">
-                                    <div class="position-relative d-flex">
-                                        <span class="wh-11 bg-primary rounded-1 d-inline-block position-relative top-1"></span>
-                                        <div>
-                                            <h4 class="fs-12 fw-semibold text-secondary mb-0 ms-1"> Pythons Unleashed: A Development Expedition</h4>
-                                            <p class="fs-12"><span class="text-primary">April 15, 2024</span> -  12.00 PM - 6.00 PM</p>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="swiper-slide cursor">
-                                    <div class="position-relative d-flex">
-                                        <span class="wh-11 bg-primary rounded-1 d-inline-block position-relative top-1"></span>
-                                        <div>
-                                            <h4 class="fs-12 fw-semibold text-secondary mb-0 ms-1"> Big Data Analytics</h4>
-                                            <p class="fs-12"><span class="text-primary">15 Mar 2024</span> -  01.00 PM - 7.00 PM</p>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="swiper-slide cursor">
-                                    <div class="position-relative d-flex">
-                                        <span class="wh-11 bg-primary rounded-1 d-inline-block position-relative top-1"></span>
-                                        <div>
-                                            <h4 class="fs-12 fw-semibold text-secondary mb-0 ms-1">Introduction to Blockchain</h4>
-                                            <p class="fs-12"><span class="text-primary">10 Mar 2024</span> -  02.00 PM - 9.00 PM</p>
-                                        </div>
-                                    </div>
-                                </div>
+                            <div wire:ignore>
+                                <div id="calendari"></div>
                             </div>
                         </div>
                     </div>
@@ -563,3 +520,78 @@
     <div class="flex-grow-1"></div>
 </div>
 
+@push('scripts')
+    <script>
+        document.addEventListener('livewire:initialized', function () {
+            const calendarEl = document.getElementById('calendari');
+            if (!calendarEl || typeof FullCalendar === 'undefined') return;
+
+            let eventet = @json($eventetKalendarit);
+
+            // Ndërtojmë një hartë: data => ngjyra (nga eventet)
+            function buildColorMap(events) {
+                const map = {};
+                events.forEach(ev => {
+                    map[ev.start] = ev.backgroundColor;
+                });
+                return map;
+            }
+
+            let colorMap = buildColorMap(eventet);
+
+            const calendar = new FullCalendar.Calendar(calendarEl, {
+                initialView: 'dayGridMonth',
+                headerToolbar: {
+                    left: 'prev,next',
+                    center: 'title',
+                    right: ''
+                },
+                height: 'auto',
+                events: [],           // nuk i shfaqim si bars
+                eventDisplay: 'none', // fshehim bars plotësisht
+
+                dayCellDidMount: function(info) {
+                    const dateStr = info.date.toISOString().split('T')[0];
+                    const ngjyra  = colorMap[dateStr];
+                    if (ngjyra) {
+                        // Gjejmë numrin e ditës brenda qelizës
+                        const numEl = info.el.querySelector('.fc-daygrid-day-number');
+                        if (numEl) {
+                            numEl.style.cssText = `
+                        display: inline-flex;
+                        align-items: center;
+                        justify-content: center;
+                        width: 26px;
+                        height: 26px;
+                        border-radius: 50%;
+                        background: ${ngjyra};
+                        color: #fff;
+                        font-weight: 700;
+                        font-size: 12px;
+                        line-height: 1;
+                    `;
+                            // Kliku mbi ditën hap detajet
+                            numEl.style.cursor = 'pointer';
+                            numEl.addEventListener('click', function() {
+                                @this.hapDetajetNgaData(dateStr);
+                            });
+                        }
+                    }
+                },
+            });
+
+            calendar.render();
+
+            // Rifreskohet pas çdo Livewire commit (ruajtje, fshirje, etj.)
+            Livewire.hook('commit', ({ component, succeed }) => {
+                succeed(() => {
+                    setTimeout(() => {
+                        const evente = @this.$get('eventetKalendarit') ?? [];
+                        colorMap = buildColorMap(evente);
+                        calendar.render(); // ri-aplikon dayCellDidMount me hartën e re
+                    }, 150);
+                });
+            });
+        });
+    </script>
+@endpush
