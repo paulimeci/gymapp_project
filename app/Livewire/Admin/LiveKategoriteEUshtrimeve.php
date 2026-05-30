@@ -9,9 +9,11 @@ use App\Models\Structure\Ushtrimet;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Support\Facades\Auth;
 use Livewire\Component;
+use Livewire\WithPagination;
 
 class LiveKategoriteEUshtrimeve extends Component
 {
+    use WithPagination;
     // ── KATEGORITË ──────────────────────────────
     public string $kat_emri       = '';
     public string $kat_pershkrimi = '';
@@ -167,7 +169,7 @@ class LiveKategoriteEUshtrimeve extends Component
             )
             )
             ->latest()
-            ->get();
+            ->paginate(10);
 
         return view('livewire.admin.live-kategorite-e-ushtrimeve', [
             'kategorite'    => Kategorite::withCount('ushtrimet')->latest()->get(),

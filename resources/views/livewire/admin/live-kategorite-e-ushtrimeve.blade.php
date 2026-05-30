@@ -176,6 +176,42 @@
                         </tbody>
                     </table>
                 </div>
+                @if($ushtrimet->hasPages())
+                    <div class="d-flex justify-content-center justify-content-sm-between align-items-center
+        text-center flex-wrap gap-2 p-4">
+        <span class="fs-12 fw-medium">
+            Duke shfaqur {{ $ushtrimet->firstItem() }}–{{ $ushtrimet->lastItem() }}
+            nga {{ $ushtrimet->total() }} rezultate
+        </span>
+                        <nav aria-label="Pagination">
+                            <ul class="pagination mb-0 justify-content-center">
+                                <li class="page-item {{ $ushtrimet->onFirstPage() ? 'disabled' : '' }}">
+                                    <button class="page-link icon"
+                                            wire:click="previousPage"
+                                        {{ $ushtrimet->onFirstPage() ? 'disabled' : '' }}>
+                                        <i class="material-symbols-outlined">keyboard_arrow_left</i>
+                                    </button>
+                                </li>
+
+                                @foreach($ushtrimet->getUrlRange(1, $ushtrimet->lastPage()) as $page => $url)
+                                    <li class="page-item {{ $page == $ushtrimet->currentPage() ? 'active' : '' }}">
+                                        <button class="page-link" wire:click="gotoPage({{ $page }})">
+                                            {{ $page }}
+                                        </button>
+                                    </li>
+                                @endforeach
+
+                                <li class="page-item {{ !$ushtrimet->hasMorePages() ? 'disabled' : '' }}">
+                                    <button class="page-link icon"
+                                            wire:click="nextPage"
+                                        {{ !$ushtrimet->hasMorePages() ? 'disabled' : '' }}>
+                                        <i class="material-symbols-outlined">keyboard_arrow_right</i>
+                                    </button>
+                                </li>
+                            </ul>
+                        </nav>
+                    </div>
+                @endif
             </div>
         </div>
     </div>
