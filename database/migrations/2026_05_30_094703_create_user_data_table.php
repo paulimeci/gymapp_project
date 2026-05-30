@@ -11,12 +11,17 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('act_stervitja', function (Blueprint $table) {
+        Schema::create('human_user_data', function (Blueprint $table) {
             $table->id();
             $table->foreignId('user_id')->constrained('users')->cascadeOnDelete();
-            $table->foreignId('kategoria_id')->constrained('excs_kategorite')->cascadeOnDelete();
             $table->date('data');
-            $table->integer('statusi')->default(0);
+            $table->float('gjatesia');
+            $table->float('pesha');
+
+            // Krijohen si string, por me kushtin CHECK që funksionon si në MySQL ashtu edhe në SQLite
+            $table->string('njesia_peshes')->default('kg')->checkIn(['kg', 'lbs']);
+            $table->string('njesia_gjatesise')->default('cm')->checkIn(['cm', 'in']);
+
             $table->timestamps();
         });
     }
@@ -26,6 +31,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('act_stervitja');
+        Schema::dropIfExists('human_user_data');
     }
 };

@@ -23,6 +23,8 @@ class LiveStervitja extends Component
     public $id_pjesa_trupit;
     public bool $modalDetaje = false;
     public bool $modal_fshirje = false;
+    public $stervitjaPezull = null; // Mbajmë të dhënat e stërvitjes së gjetur
+    public $modal_pending = false;
     public ?int $seancaPerFshirjeId = null;
     public ?int $stervitjaDetajeId = null;
     public ?int $stervitjaId = null;
@@ -46,25 +48,44 @@ class LiveStervitja extends Component
 
     public function hapModal($kategoriaId): void
     {
-        $this->kategoriaId = $kategoriaId;
-        $this->data        = now()->toDateString();
-        $this->ushtrimet   = [];
+        // Rregullojmë query-n duke përfshirë marrëdhënien e kategorisë dhe kontrolluar saktë 'user_id'
+        $stervitjaEkzistuese = Stervitja::with('kategoria')
+            ->where('user_id', Auth::id())
+            ->where('statusi', 0)
+            ->first(); // Përdorim first() që të marrim objektin nëse ekziston
 
-        $kategoria = Kategorite::with('ushtrimet')->find($kategoriaId);
-        if (!$kategoria) return;
+        if ($stervitjaEkzistuese) {
+            $this->stervitjaPezull = $stervitjaEkzistuese; // Ruajmë objektin për ta shfaqur te modali
+            $this->modal_pending = true;
+        } else {
+            $this->kategoriaId = $kategoriaId;
+            $this->data        = now()->toDateString();
+            $this->ushtrimet   = [];
+            $this->stervitjaId = null; // Sigurohemi që të jetë null për stërvitje të re
 
-        foreach ($kategoria->ushtrimet as $u) {
-            $this->ushtrimet[$u->id] = [
-                'emri'          => $u->emri,
-                'njesia_matese' => (int) $u->id_njesia_matese,
-                'checked'       => false,
-                'sets'          => [
-                    ['reps' => '', 'pesha' => '', 'minuta' => '', 'km' => '']
-                ],
-            ];
+            $kategoria = Kategorite::with('ushtrimet')->find($kategoriaId);
+            if (!$kategoria) return;
+
+            foreach ($kategoria->ushtrimet as $u) {
+                $this->ushtrimet[$u->id] = [
+                    'emri'          => $u->emri,
+                    'njesia_matese' => (int) $u->id_njesia_matese,
+                    'checked'       => false,
+                    'sets'          => [
+                        ['reps' => '', 'pesha' => '', 'minuta' => '', 'km' => '', 'modaliteti' => 'dual']
+                    ],
+                ];
+            }
+
+            $this->modalHapur = true;
         }
+    }
 
-        $this->modalHapur = true;
+// Funksioni për të mbyllur modalin e kujdesit dhe pastruar variablen
+    public function mbyll_modalKujdes(): void
+    {
+        $this->modal_pending = false;
+        $this->stervitjaPezull = null;
     }
 
     /*public function mbyllModal(): void
@@ -137,7 +158,8 @@ class LiveStervitja extends Component
     }
 
 // 4. Modifiko metodën ruaj() që të punojë edhe për update
-    public function ruaj(): void
+    // Pranon statusin si parametër (0 = Progres, 1 = Përfunduar)
+    public function ruaj(int $statusi = 0): void
     {
         $this->validate([
             'kategoriaId' => 'required|exists:excs_kategorite,id',
@@ -154,22 +176,24 @@ class LiveStervitja extends Component
         try {
             DB::beginTransaction();
 
-            // Ndryshimi: Përdorim updateOrCreate nëse ka stervitjaId
+            // 1. Ndryshimi: Përfshijmë edhe statusin që vjen nga butoni
             $stervitja = Stervitja::updateOrCreate(
                 ['id' => $this->stervitjaId],
                 [
                     'user_id'      => Auth::id(),
                     'kategoria_id' => $this->kategoriaId,
                     'data'         => $this->data,
+                    'statusi'      => $statusi, // Ruhet 0 ose 1
                 ]
             );
 
-            // Nëse po editojmë, fshijmë të dhënat e vjetra të ushtrimeve për t'i rishkruar të pastra
-            if ($this->stervitjaId) {
-                $vjetraIds = StervitjaUshtrimet::where('id_stervitjes', $stervitja->id)->pluck('id');
-                StervitjaUshtrimetDetaje::whereIn('id_ushtrimit_exct', $vjetraIds)->delete();
-                StervitjaUshtrimet::where('id_stervitjes', $stervitja->id)->delete();
-            }
+            // Pas ruajtjes së parë, mbajmë mend ID-në që herën tjetër të bëhet UPDATE dhe jo INSERT
+            $this->stervitjaId = $stervitja->id;
+
+            // Nëse po editojmë ose ruajmë progresin e radhës, fshijmë të vjetrat
+            $vjetraIds = StervitjaUshtrimet::where('id_stervitjes', $stervitja->id)->pluck('id');
+            StervitjaUshtrimetDetaje::whereIn('id_ushtrimit_exct', $vjetraIds)->delete();
+            StervitjaUshtrimet::where('id_stervitjes', $stervitja->id)->delete();
 
             $konvertimKrahu = [
                 'dual'  => 'te_dyja',
@@ -203,13 +227,24 @@ class LiveStervitja extends Component
 
             DB::commit();
 
-            $this->mbyllModal();
+            // 2. Ndryshimi: Ndajmë sjelljen e mesazheve bazuar te statusi
+            if ($statusi === 1) {
+                // Nëse përfundon stërvitjen, mbyllet modali
+                $this->mbyllModal();
 
-            $this->dispatch('showSweetAlert', [
-                'type'    => 'success',
-                'title'   => $this->stervitjaId ? 'Përditësuar!' : 'Ruajtur!',
-                'message' => $this->stervitjaId ? 'Stërvitja u përditësua me sukses.' : 'Stërvitja u ruajt me sukses.',
-            ]);
+                $this->dispatch('showSweetAlert', [
+                    'type'    => 'success',
+                    'title'   => 'U krye!',
+                    'message' => 'Stërvitja u përfundua dhe u regjistrua me sukses.',
+                ]);
+            } else {
+                // Nëse është thjesht ruajtje progresi, modali rri hapur
+                $this->dispatch('showSweetAlert', [
+                    'type'    => 'success',
+                    'title'   => 'Progresi u ruajt!',
+                    'message' => 'Të dhënat u azhurnuan pa e mbyllur stërvitjen.',
+                ]);
+            }
 
         } catch (\Exception $e) {
             DB::rollBack();
@@ -298,6 +333,7 @@ class LiveStervitja extends Component
         $this->seancaPerFshirjeId = $id;
         $this->modal_fshirje = true; // Hap modalin
     }
+
 
 // 2. Ky funksion thirret nëse përdoruesi klikon "Anulo"
     public function anuloFshirjen(): void

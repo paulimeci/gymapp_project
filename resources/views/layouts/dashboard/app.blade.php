@@ -34,47 +34,19 @@
 @include('layouts.dashboard.partials.preloader')
 
 <div class="container-fluid">
-    <div class="main-content d-flex flex-column">
-        <!-- Sidebar -->
-        @include('layouts.dashboard.partials.sidebar')
+    <div class="main-content d-flex flex-column min-vh-100">
 
-        <!-- Header -->
+        @include('layouts.dashboard.partials.sidebar')
         @include('layouts.dashboard.partials.header')
 
-        <!-- Main Content Area -->
-        <div class="main-content-container overflow-hidden">
-            <!-- Breadcrumb dhe titull -->
-            <div class="d-flex justify-content-between align-items-center flex-wrap gap-2 mb-4">
-                <h3 class="mb-0">@yield('page-title', 'Dashboard')</h3>
-
-                @if(View::hasSection('breadcrumb'))
-                    @yield('breadcrumb')
-                @else
-                    <nav style="--bs-breadcrumb-divider: '>';" aria-label="breadcrumb">
-                        <ol class="breadcrumb align-items-center mb-0 lh-1">
-                            <li class="breadcrumb-item">
-                                <a href="{{ route('dashboard') }}"
-                                   class="d-flex align-items-center text-decoration-none">
-                                    <i class="ri-home-4-line fs-18 text-primary me-1"></i>
-                                    <span class="text-secondary fw-medium hover">Dashboard</span>
-                                </a>
-                            </li>
-                            <li class="breadcrumb-item active" aria-current="page">
-                                <span class="fw-medium">@yield('page-title', 'Current Page')</span>
-                            </li>
-                        </ol>
-                    </nav>
-                @endif
-            </div>
-
-            <!-- Content -->
+        <div class="main-content-container overflow-hidden flex-grow-1">
+            {{-- breadcrumb + content --}}
             {{ $slot }}
         </div>
 
-        <div class="flex-grow-1"></div>
-
-        <!-- Footer -->
+        {{-- Footer mbetet poshtë gjithmonë --}}
         @include('layouts.dashboard.partials.footer')
+
     </div>
 </div>
 

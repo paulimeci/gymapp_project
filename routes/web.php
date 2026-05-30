@@ -32,7 +32,8 @@ Route::middleware(['auth', 'verified'])->group(function () {
         ->name('admin.dashboard');
 
     Route::get('admin/manage/kategorite',\App\Livewire\Admin\LiveKategoriteEUshtrimeve::class)->middleware('role:admin')->name('manage.kategorite');
-    Route::get('stervitja',\App\Livewire\Stervitja\LiveStervitja::class)->middleware('role:admin')->name('manage.stervitjen');
+    Route::get('admin/stervitja',\App\Livewire\Stervitja\LiveStervitja::class)->middleware('role:admin')->name('manage.stervitjen');
+    Route::get('admin/user/data',\App\Livewire\UserData\LiveTeDhenat::class)->middleware('role:admin')->name('manage.user.data');
 
 });
 

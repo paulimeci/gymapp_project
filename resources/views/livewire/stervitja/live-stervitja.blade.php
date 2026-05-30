@@ -223,20 +223,33 @@
 
                         </div>
 
-                        <div class="modal-footer border-0 pt-0">
+                        <div class="modal-footer border-0 pt-0 d-flex justify-content-between">
+                            {{-- Butoni Anulo në të majtë --}}
                             <button type="button"
                                     class="btn btn-light btn-sm rounded-3"
                                     wire:click="mbyllModal">
                                 Anulo
                             </button>
-                            <button type="button"
-                                    class="btn btn-primary btn-sm rounded-3"
-                                    wire:click="ruaj">
-                                <span wire:loading wire:target="ruaj"
-                                      class="spinner-border spinner-border-sm me-1"></span>
-                                <i class="material-symbols-outlined fs-16 align-middle me-1">save</i>
-                                Ruaj Stërvitjen
-                            </button>
+
+                            <div class="d-flex gap-2">
+                                {{-- BUTONI I RI: Ruaj pa e mbyllur (Statusi 0) --}}
+                                <button type="button"
+                                        class="btn btn-outline-primary btn-sm rounded-3"
+                                        wire:click="ruaj(0)">
+                                    <span wire:loading wire:target="ruaj(0)" class="spinner-border spinner-border-sm me-1"></span>
+                                    <i class="material-symbols-outlined fs-16 align-middle me-1">sync</i>
+                                    Ruaj Progresin
+                                </button>
+
+                                {{-- BUTONI AKTUAL: Përfundo Stërvitjen plotësisht (Statusi 1) --}}
+                                <button type="button"
+                                        class="btn btn-primary btn-sm rounded-3"
+                                        wire:click="ruaj(1)">
+                                    <span wire:loading wire:target="ruaj(1)" class="spinner-border spinner-border-sm me-1"></span>
+                                    <i class="material-symbols-outlined fs-16 align-middle me-1">task_alt</i>
+                                    Përfundo Stërvitjen
+                                </button>
+                            </div>
                         </div>
 
                     </div>
@@ -359,6 +372,47 @@
                 </div>
             </div>
         @endif
+        @if($modal_pending)
+            <div class="modal fade show d-block" tabindex="-1" style="background: rgba(0,0,0,0.5); z-index: 1055;">
+                <div class="modal-dialog modal-dialog-centered">
+                    <div class="modal-content border-0 rounded-3 shadow">
+
+                        <div class="modal-header border-0 pb-0">
+                            <h5 class="modal-title fw-bold text-danger d-flex align-items-center gap-1">
+                                <i class="material-symbols-outlined align-middle fs-20">warning</i>
+                                Kujdes
+                            </h5>
+                            <button type="button" class="btn-close" wire:click="mbyll_modalKujdes()"></button>
+                        </div>
+
+                        <div class="modal-body py-3">
+                            <p class="mb-0 text-secondary lh-base">
+                                Ju lutem përfundoni stërvitjen pezull që keni para se të krijoni një të re.
+                            </p>
+
+                            @if($stervitjaPezull)
+                                <div class="mt-3 p-3 bg-warning bg-opacity-10 border border-warning border-opacity-20 rounded-3">
+                                    <div class="fs-12 text-uppercase fw-bold text-warning mb-1">Seanca Aktive:</div>
+                                    <div class="fs-14 fw-semibold text-dark">
+                                        Kategorija: <span class="text-uppercase text-primary">{{ $stervitjaPezull->kategoria?->emri ?? '—' }}</span>
+                                    </div>
+                                    <div class="fs-13 text-secondary mt-1">
+                                        Data: <span class="fw-medium">{{ \Carbon\Carbon::parse($stervitjaPezull->data)->format('d M Y') }}</span>
+                                    </div>
+                                </div>
+                            @endif
+                        </div>
+
+                        <div class="modal-footer border-0 pt-0">
+                            <button type="button" class="btn btn-light btn-sm rounded-2" wire:click="mbyll_modalKujdes()">
+                                Mbyll
+                            </button>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        @endif
 
         <div class="row justify-content-center">
             <div class="col-xxl-8">
@@ -374,6 +428,7 @@
                                     <thead>
                                     <tr>
                                         <th scope="col">#</th>
+                                        <th scope="col">Statusi</th>
                                         <th scope="col">Data</th>
                                         <th scope="col">Kategoria</th>
                                         <th scope="col">Human Body</th>
@@ -384,6 +439,25 @@
                                     @forelse($historiku as $s)
                                         <tr>
                                             <td class="text-secondary fs-13">{{ $historiku->firstItem() + $loop->index }}</td>
+                                            <td class="text-secondary fs-13">
+                                                <div class="d-flex align-items-center gap-2">
+                                                    <span>{{ $historiku->firstItem() + $loop->index }}</span>
+
+                                                    @if($s->statusi === 1)
+                                                        <span class="badge bg-success bg-opacity-10 text-success border border-success border-opacity-20 px-2 py-1 fs-11 rounded-pill d-inline-flex align-items-center gap-1"
+                                                              title="E përfunduar">
+                <span class="p-1 bg-success rounded-circle"></span>
+                Kryer
+            </span>
+                                                    @else
+                                                        <span class="badge bg-warning bg-opacity-10 text-dark border border-warning border-opacity-50 px-2 py-1 fs-11 rounded-pill d-inline-flex align-items-center gap-1"
+                                                              title="Në progres / E hapur">
+                <span class="p-1 bg-warning rounded-circle animate-pulse"></span>
+                Progres
+            </span>
+                                                    @endif
+                                                </div>
+                                            </td>
                                             <td class="fs-13 fw-medium">
                                                 {{ \Carbon\Carbon::parse($s->data)->format('d M Y') }}
                                             </td>

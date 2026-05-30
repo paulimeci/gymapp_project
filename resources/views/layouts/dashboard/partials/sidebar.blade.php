@@ -21,47 +21,15 @@
                     <span class="title">Dashboard</span>
                     <span class="count">30</span>
                 </a>
-                <ul class="menu-sub">
-                    <li class="menu-item">
-                        <a href="#" class="menu-link">eCommerce</a>
-                    </li>
-                    <li class="menu-item">
-                        <a href="#" class="menu-link">CRM <span class="new tag">Hot</span></a>
-                    </li>
-                </ul>
+
             </li>
 
-            <li class="menu-item">
-                <a href="javascript:void(0);" class="menu-link menu-toggle active">
-                    <span class="material-symbols-outlined menu-icon">note_stack</span>
-                    <span class="title">Front Pages</span>
-                </a>
-                <ul class="menu-sub">
-                    <li class="menu-item"><a href="#" class="menu-link">Home</a></li>
-                    <li class="menu-item"><a href="#" class="menu-link">Features</a></li>
-                    <li class="menu-item"><a href="#" class="menu-link">Our Team</a></li>
-                    <li class="menu-item"><a href="#" class="menu-link">FAQ's</a></li>
-                    <li class="menu-item"><a href="#" class="menu-link">Contact</a></li>
-                </ul>
-            </li>
 
             <li class="menu-title small text-uppercase">
                 <span class="menu-title-text">APPS</span>
             </li>
 
-            <li class="menu-item">
-                <a href="#" class="menu-link">
-                    <span class="material-symbols-outlined menu-icon">format_list_bulleted</span>
-                    <span class="title">To Do List</span>
-                </a>
-            </li>
 
-            <li class="menu-item">
-                <a href="#" class="menu-link">
-                    <span class="material-symbols-outlined menu-icon">date_range</span>
-                    <span class="title">Calendar</span>
-                </a>
-            </li>
 
             <li class="menu-item">
                 <a href="{{route('manage.kategorite')}}" class="menu-link">
@@ -77,52 +45,12 @@
                 </a>
             </li>
 
-            <li class="menu-item">
-                <a href="javascript:void(0);" class="menu-link menu-toggle active">
-                    <span class="material-symbols-outlined menu-icon">mail</span>
-                    <span class="title">Email</span>
-                </a>
-                <ul class="menu-sub">
-                    <li class="menu-item"><a href="#" class="menu-link">Inbox</a></li>
-                    <li class="menu-item"><a href="#" class="menu-link">Compose</a></li>
-                </ul>
-            </li>
 
             <li class="menu-item">
-                <a href="{{--{{route('manage.furnitoret')}}--}}" class="menu-link">
+                <a href="{{route('manage.user.data')}}" class="menu-link">
                     <span class="material-symbols-outlined menu-icon">team_dashboard</span>
-                    <span class="title">Furnitoret</span>
+                    <span class="title">UserData</span>
                 </a>
-            </li>
-
-            <li class="menu-item">
-                <a href="javascript:void(0);" class="menu-link menu-toggle active">
-                    <span class="material-symbols-outlined menu-icon">folder_open</span>
-                    <span class="title">File Manager</span>
-                </a>
-                <ul class="menu-sub">
-                    <li class="menu-item"><a href="#" class="menu-link">My Drive</a></li>
-                    <li class="menu-item"><a href="#" class="menu-link">Assets</a></li>
-                </ul>
-            </li>
-
-            <li class="menu-title small text-uppercase">
-                <span class="menu-title-text">PAGES</span>
-            </li>
-
-            <li class="menu-item">
-                <a href="javascript:void(0);" class="menu-link menu-toggle active">
-                    <span class="material-symbols-outlined menu-icon">shopping_cart</span>
-                    <span class="title">eCommerce</span>
-                </a>
-                <ul class="menu-sub">
-                    <li class="menu-item"><a href="#" class="menu-link">Products Grid</a></li>
-                    <li class="menu-item"><a href="#" class="menu-link">Products List</a></li>
-                </ul>
-            </li>
-
-            <li class="menu-title small text-uppercase">
-                <span class="menu-title-text">OTHERS</span>
             </li>
 
             <li class="menu-item">
